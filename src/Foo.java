@@ -1,29 +1,29 @@
 import java.util.concurrent.CountDownLatch;
 
 public class Foo {
-    private  CountDownLatch start2Thread = new CountDownLatch(1);
-    private CountDownLatch start3Thread = new CountDownLatch(2);
+    private  CountDownLatch cdl1 = new CountDownLatch(1);
+    private CountDownLatch cdl2 = new CountDownLatch(2);
 
     public void first(Runnable r) {
 
         System.out.print("first");
-        start2Thread.countDown();
-        start3Thread.countDown();
+        cdl1.countDown();
+        cdl2.countDown();
     }
     public void second(Runnable r) {
 
         try {
-            start2Thread.await();
+            cdl1.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.print("second");
-        start3Thread.countDown();
+        cdl2.countDown();
 
     }
     public void third(Runnable r) {
         try {
-            start3Thread.await();
+            cdl2.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
