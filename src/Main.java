@@ -4,18 +4,17 @@ public class Main {
 
     private static Foo foo = new Foo();
 
-    private static CountDownLatch start2Thread = new CountDownLatch(1);
-    private static CountDownLatch start3Thread = new CountDownLatch(2);
-
-
     public static void main(String[] args) {
 
+        Thread a = new Thread(new Thread1());
+        Thread b = (new Thread(new Thread2()));
+        Thread c = (new Thread(new Thread3()));
 
 
+        c.start();
+        b.start();
+        a.start();
 
-        new Thread(new Thread3()).start();
-        new Thread(new Thread2()).start();
-        new Thread(new Thread1()).start();
 
 
     }
@@ -24,9 +23,7 @@ public class Main {
 
         @Override
         public void run() {
-            foo.first();
-            start2Thread.countDown();
-            start3Thread.countDown();
+            foo.first(this);
         }
     }
 
@@ -34,13 +31,7 @@ public class Main {
 
         @Override
         public void run() {
-            try {
-                start2Thread.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            foo.second();
-            start3Thread.countDown();
+            foo.second(this);
         }
     }
 
@@ -48,13 +39,7 @@ public class Main {
 
         @Override
         public void run() {
-            try {
-                start3Thread.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            foo.third();
-
+            foo.third(this);
         }
     }
 
